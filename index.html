@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>DBpedia lookup</title>
+    <link rel="stylesheet" href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/themes/smoothness/jquery-ui.min.css" />
+  </head>
+  <body>
+    <div class="ui-widget">
+      <label for="topics">DBpedia topics: </label>
+      <input id="topics" />
+    </div>
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+    <script src="//ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/jquery-ui.min.js"></script>
+    <script>
+      var topics = {},
+          $topics = $("#topics").autocomplete({
+        autoFocus: true,
+        source: function(request, callback) {
+          $.ajax({
+            url: "http://lookup.dbpedia.org/api/search/PrefixSearch",
+            data: { MaxHits: 10, QueryString: request.term },
+            dataType: "json",
+            success: function (response) {
+              callback(response.results.map(function (m) {
+                topics[m.label] = m.uri;
+                return m.label;
+              }));
+            }
+          });
+        }
+      }).keyup(function (event) {
+        if (event.keyCode === 13)
+          navigateToTopic();
+      });
+
+      function navigateToTopic() {
+        var label = $topics.val();
+        if (label)
+          window.location.href = topics[label] ||
+                                 ("http://dbpedia.org/page/" + encodeURIComponent(label));
+      };
+    </script>
+  </body>
+</html>
