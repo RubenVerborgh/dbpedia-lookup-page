@@ -9,6 +9,7 @@
     <div class="ui-widget">
       <label for="topics">DBpedia topics: </label>
       <input id="topics" />
+      <button id="submit"/>Go</button>
     </div>
     <script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
     <script src="//ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/jquery-ui.min.js"></script>
@@ -33,6 +34,7 @@
         if (event.keyCode === 13)
           navigateToTopic();
       });
+      $('button').click(navigateToTopic);
 
       function navigateToTopic() {
         var label = $topics.val();
